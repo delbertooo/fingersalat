@@ -1,0 +1,19 @@
+version: "3.4"
+
+volumes:
+    data_nodemodules:
+
+services:
+    shell:
+        build:
+            context: ..
+            dockerfile: devtools.Dockerfile
+        #image: node:12.18.3-alpine3.12
+        working_dir: /app
+        tty: true
+        entrypoint: sh
+        volumes:
+            - ..:/app/
+            - data_nodemodules:/app/node_modules
+        ports: 
+            - "8080:8080"
