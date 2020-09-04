@@ -38,19 +38,19 @@
     </v-app-bar>
 
     <v-main>
-      <HelloWorld/>
+      <CooleyPlayer/>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
+import CooleyPlayer from './components/CooleyPlayer';
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld,
+    CooleyPlayer,
   },
 
   data: () => ({
