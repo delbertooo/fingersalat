@@ -2,6 +2,9 @@
   <v-container>
     <v-row class="text-center">
       <v-col cols="12">
+        <v-btn icon v-on:click="generate">
+          <v-icon>mdi-cached</v-icon>
+        </v-btn>
         <v-textarea
           id="abc-source"
           solo
@@ -30,6 +33,7 @@
 <script>
 import "abcjs/abcjs-midi.css";
 import abcjs from "abcjs/midi";
+import {createFoo} from "./music"
 export default {
   name: "CooleyPlayer",
 
@@ -55,6 +59,17 @@ export default {
   },
 
   methods: {
+    generate() {
+      const notes = createFoo().map(([a,b]) => a + "2" + b + "2").join(' | ')
+      this.tune = `
+X:4
+T:Thirds
+M:4/4
+L:1/4
+K:Bb
+${notes} ||
+`
+    },
     listener(midiControl, progress) {
       // This provides a more linear view of the progress, for a progress bar or for an unrelated animation.
       this.progress = progress;
