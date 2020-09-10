@@ -60,14 +60,16 @@ export default {
 
   methods: {
     generate() {
-      const notes = createFoo().map(([a,b]) => a + "2" + b + "2").join(' | ')
+      const input = createFoo()
+      const notes = input.map(([a,b]) => a + "2 " + b + "2").join(' | ')
+      const lastNote = input[input.length - 1][0] + "4"
       this.tune = `
 X:4
 T:Thirds
 M:4/4
 L:1/4
 K:Bb
-${notes} ||
+${notes} | ${lastNote} ||
 `
     },
     listener(midiControl, progress) {
