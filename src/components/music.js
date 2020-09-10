@@ -20,17 +20,33 @@ function triple(scale, note) {
     const ns = Scale.get(scale).notes
     const major = transpose(note, '3M')
     const minor = transpose(note, '3m')
-    const scaleContains = x => ns.indexOf(x) !== -1
+    const scaleContains = x => ns.indexOf(Note.pitchClass(x)) !== -1
 
-    if (scaleContains(major) || scaleContains(Note.enharmonic(major))) { return major; }
-    else if (scaleContains(minor) || scaleContains(Note.enharmonic(minor))) { return minor; }
-    else { return major; }
+    let tripleNote = major
+    if (scaleContains(major) || scaleContains(Note.enharmonic(major))) { tripleNote = major }
+    else if (scaleContains(minor) || scaleContains(Note.enharmonic(minor))) { tripleNote = minor }
+
+    console.debug('using ', tripleNote == minor ? 'minor' : 'major', 'triple note', tripleNote)
+    return tripleNote;
+}
+
+function toAbc(scale, note) {
+    const ns = Scale.get(scale).notes
+    const scaleContains = x => ns.indexOf(Note.pitchClass(x)) !== -1
+
+    let noteToConvert = note
+    if (scaleContains(note)) {
+        const n = Note.get(note)
+        noteToConvert = n.letter + (n.oct ?? '')
+    }
+    console.debug('made', note, 'to', noteToConvert)
+    return AbcNotation.scientificToAbcNotation(noteToConvert)
 }
 
 export function createFoo() {
     return Collection.range(1, 10)
         .map(() => randomScaleNote('F major', 'C4', 'G5').name)
-        .map(n => [n, triple('F major', n)]) // TODO: take minor if it's part of the scale
-        .map(([a, b]) => [AbcNotation.scientificToAbcNotation(a), AbcNotation.scientificToAbcNotation(b)]) // TODO: if note or enharmonic is in scale -> use scale value without alteration
+        .map(n => [n, triple('F major', n)])
+        .map(([a, b]) => [toAbc('F major', a), toAbc('F major', b)])
 }
 
