@@ -39,7 +39,7 @@
     </v-row>
     <v-row class="text-center">
       <v-col cols="12">
-        <div id="midi" class="abcjs-large"></div>
+        <div id="midi"></div>
       </v-col>
       <v-col cols="12">
         <div>
