@@ -44,9 +44,14 @@ function toAbc(scale, note) {
 }
 
 export function createFoo() {
+    
+    const scale = 'F major';
+    const minNote = 'C4';
+    const maxNote = 'G5';
+    const realMaxNote = transpose(maxNote, '-3M')
     return Collection.range(1, 10)
-        .map(() => randomScaleNote('F major', 'C4', 'G5').name)
-        .map(n => [n, triple('F major', n)])
-        .map(([a, b]) => [toAbc('F major', a), toAbc('F major', b)])
+        .map(() => randomScaleNote(scale, minNote, realMaxNote).name)
+        .map(n => [n, triple(scale, n)])
+        .map(([a, b]) => [toAbc(scale, a), toAbc(scale, b)])
 }
 
