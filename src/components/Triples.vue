@@ -2,7 +2,8 @@
   <v-container>
     <v-row class="text-center">
       <v-col class="d-flex" cols="12">
-        <v-select :items="scales" v-model="scale" label="Key"></v-select>
+        <v-select :items="scales" v-model="scale" label="Key"
+          v-on:change="generate"></v-select>
       </v-col>
       <v-col class="d-flex" cols="12">
         <v-range-slider
@@ -10,6 +11,7 @@
           v-model="range"
           :min="0"
           :max="notes.length - 1"
+          v-on:change="generate"
           thumb-label="always"
         >
           <template v-slot:thumb-label="{ value }">{{ notes[value] }}</template>
@@ -19,6 +21,7 @@
         <v-slider
           label="Speed"
           v-model="speed"
+          v-on:change="generate"
           :min="40"
           :max="220"
           hint="BPM"
@@ -26,7 +29,9 @@
           thumb-label="always"
         ></v-slider>
       </v-col>
-      <v-col class="d-flex" cols="12">
+    </v-row>
+    <v-row class="text-center">
+      <v-col cols="12">
         <v-btn icon v-on:click="generate" x-large>
           <v-icon>mdi-cached</v-icon>
         </v-btn>
