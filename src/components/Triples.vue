@@ -1,11 +1,14 @@
 <template>
   <v-container>
     <v-row class="text-center">
-      <v-col cols="12">
+      <v-col class="d-flex" cols="12" sm="6">
+        <v-select :items="scales" v-model="scale" label="Key"></v-select>
         <v-btn icon v-on:click="generate" x-large>
           <v-icon>mdi-cached</v-icon>
         </v-btn>
       </v-col>
+    </v-row>
+    <v-row class="text-center">
       <v-col cols="12">
         <div id="midi" class="abcjs-large"></div>
       </v-col>
@@ -28,6 +31,18 @@ export default {
   data: () => ({
     progress: {},
     _tune: "",
+    scales: [
+      "A major",
+      "D major",
+      "G major",
+      "C major",
+      "F major",
+      "Bb major",
+      "Eb major",
+    ],
+    scale: "F major",
+    minNote: "C4",
+    maxNote: "G5",
   }),
   computed: {
     tune: {
@@ -54,15 +69,16 @@ export default {
   },
   methods: {
     generate() {
-      const input = createTriples("F major", "C4", "G5");
-      const notes = input.map(([a, b]) => a + "2 " + b + "2").join(" | ");
+      const input = createTriples(this.scale, this.minNote, this.maxNote);
+      const notes = input.map(([a, b]) => "(" + a + "2 " + b + "2" + ")").join(" | ");
       const lastNote = input[input.length - 1][0] + "4";
       this.tune = `
 X:4
 T:Thirds
 M:4/4
 L:1/4
-K:Bb
+Q:100
+K: ${this.scale}
 ${notes} | ${lastNote} ||
 `;
     },
