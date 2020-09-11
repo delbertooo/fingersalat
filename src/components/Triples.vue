@@ -1,8 +1,32 @@
 <template>
   <v-container>
     <v-row class="text-center">
-      <v-col class="d-flex" cols="12" sm="6">
+      <v-col class="d-flex" cols="12">
         <v-select :items="scales" v-model="scale" label="Key"></v-select>
+      </v-col>
+      <v-col class="d-flex" cols="12">
+        <v-range-slider
+          label="Range"
+          v-model="range"
+          :min="0"
+          :max="notes.length - 1"
+          thumb-label="always"
+        >
+          <template v-slot:thumb-label="{ value }">{{ notes[value] }}</template>
+        </v-range-slider>
+      </v-col>
+      <v-col class="d-flex" cols="12">
+        <v-slider
+          label="Speed"
+          v-model="speed"
+          :min="40"
+          :max="220"
+          hint="BPM"
+          persistent-hint
+          thumb-label="always"
+        ></v-slider>
+      </v-col>
+      <v-col class="d-flex" cols="12">
         <v-btn icon v-on:click="generate" x-large>
           <v-icon>mdi-cached</v-icon>
         </v-btn>
@@ -24,7 +48,7 @@
 <script>
 import "abcjs/abcjs-midi.css";
 import abcjs from "abcjs/midi";
-import { createTriples } from "./music";
+import { createTriples, notesBetween } from "./music";
 export default {
   name: "Triples",
 
@@ -40,9 +64,12 @@ export default {
       "Bb major",
       "Eb major",
     ],
+    notes: notesBetween("F#3", "C6"),
     scale: "F major",
-    minNote: "C4",
-    maxNote: "G5",
+    speed: 100,
+    minNote: 0,
+    maxNote: 0,
+    range: [0, 0],
   }),
   computed: {
     tune: {
@@ -64,20 +91,29 @@ export default {
       },
     },
   },
+  created() {
+    this.range = ["C4", "G5"].map(x => this.notes.indexOf(x));
+  },
   mounted() {
     this.generate();
   },
   methods: {
     generate() {
-      const input = createTriples(this.scale, this.minNote, this.maxNote);
-      const notes = input.map(([a, b]) => "(" + a + "2 " + b + "2" + ")").join(" | ");
+      const input = createTriples(
+        this.scale,
+        this.notes[this.range[0]],
+        this.notes[this.range[1]]
+      );
+      const notes = input
+        .map(([a, b]) => "(" + a + "2 " + b + "2" + ")")
+        .join(" | ");
       const lastNote = input[input.length - 1][0] + "4";
       this.tune = `
 X:4
 T:Thirds
 M:4/4
 L:1/4
-Q:100
+Q:${this.speed}
 K: ${this.scale}
 ${notes} | ${lastNote} ||
 `;

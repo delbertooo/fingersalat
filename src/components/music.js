@@ -51,3 +51,21 @@ export function createTriples(scale, minNote, maxNote) {
         .map(([a, b]) => [toAbc(scale, a), toAbc(scale, b)])
 }
 
+export function notesBetween(min, max) {
+    const nMin = Note.get(min)
+    const nMax = Note.get(max)
+    if (nMin.height >= nMax.height) throw new Error('min >= max')
+    const nextNote = note => {
+        let n = note
+        if (n.alt == -1) {
+            n = Note.get(Note.enharmonic(n))
+        }
+        return Note.get(Note.simplify(n.pc + '#' + n.oct))
+    }
+    const r = []
+    for (let currentNote = nMin; currentNote.height <= nMax.height; currentNote = nextNote(currentNote)) {
+        r.push(currentNote.name)
+    }
+    return r
+}
+
