@@ -43,11 +43,7 @@ function toAbc(scale, note) {
     return AbcNotation.scientificToAbcNotation(noteToConvert)
 }
 
-export function createFoo() {
-    
-    const scale = 'F major';
-    const minNote = 'C4';
-    const maxNote = 'G5';
+export function createTriples(scale, minNote, maxNote) {
     const realMaxNote = transpose(maxNote, '-3M')
     return Collection.range(1, 10)
         .map(() => randomScaleNote(scale, minNote, realMaxNote).name)
