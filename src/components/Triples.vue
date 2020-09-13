@@ -120,6 +120,7 @@ M:4/4
 L:1/4
 Q:${this.speed}
 K: ${this.scale}
+V:T1 name="🎺 in Bb"   snm="Tr. (B)" transpose=-2
 ${notes} | ${lastNote} ||
 `;
     },
