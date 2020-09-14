@@ -5,7 +5,7 @@
       color="primary"
       dark
     >
-      <span class="title ml-3 mr-5">Finger<span class="font-weight-light">salat</span></span>
+      <span class="title ml-3 mr-5">finger<span class="font-weight-light">salat</span></span>
 
       <v-spacer></v-spacer>
 
