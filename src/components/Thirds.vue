@@ -3,10 +3,10 @@
     <v-row class="text-center">
       <v-col class="d-flex">
         <v-select :items="scales" v-model="scale" label="Key"
-          v-on:change="generate"></v-select>
+          v-on:change="generate()"></v-select>
       </v-col>
       <v-col class="d-flex">
-        <v-switch v-model="showFingering" label="Show fingering" v-on:change="generate"></v-switch>
+        <v-switch v-model="showFingering" label="Show fingering" v-on:change="generate(true)"></v-switch>
       </v-col>
       <v-col class="d-flex" cols="12">
         <v-range-slider
@@ -14,7 +14,7 @@
           v-model="range"
           :min="0"
           :max="notes.length - 1"
-          v-on:change="generate"
+          v-on:change="generate()"
           thumb-label="always"
         >
           <template v-slot:thumb-label="{ value }">{{ notes[value] }}</template>
@@ -24,7 +24,7 @@
         <v-slider
           label="Speed"
           v-model="speed"
-          v-on:change="generate"
+          v-on:change="generate(true)"
           :min="40"
           :max="220"
           hint="BPM"
@@ -35,7 +35,7 @@
     </v-row>
     <v-row class="text-center">
       <v-col cols="12">
-        <v-btn icon v-on:click="generate" x-large>
+        <v-btn icon v-on:click="generate()" x-large>
           <v-icon>mdi-cached</v-icon>
         </v-btn>
       </v-col>
@@ -63,6 +63,7 @@ export default {
   data: () => ({
     progress: {},
     _tune: "",
+    _generatedNotes: [],
     showFingering: false,
     scales: [
       "A major",
@@ -113,12 +114,15 @@ export default {
       }
       return fingering(note).map(x => `"_${x}"`).join('')
     },
-    generate() {
-      const input = createThirds(
-        this.scale,
-        this.notes[this.range[0]],
-        this.notes[this.range[1]]
-      );
+    generate(shallow) {
+      if (!shallow) {
+        this._generatedNotes = createThirds(
+          this.scale,
+          this.notes[this.range[0]],
+          this.notes[this.range[1]]
+        )
+      }
+      const input = this._generatedNotes
       const toNote = (generatedNote, length) => `${this.fingeringText(generatedNote.note)}${generatedNote.value}${length}`
       const notes = input
         .map(([a, b]) => `(${toNote(a, 2)} ${toNote(b, 2)})`)
