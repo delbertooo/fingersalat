@@ -53,9 +53,9 @@
 <script>
 import "abcjs/abcjs-midi.css";
 import abcjs from "abcjs/midi";
-import { createTriples, notesBetween } from "./music";
+import { createThirds, notesBetween } from "./music";
 export default {
-  name: "Triples",
+  name: "Thirds",
 
   data: () => ({
     progress: {},
@@ -104,7 +104,7 @@ export default {
   },
   methods: {
     generate() {
-      const input = createTriples(
+      const input = createThirds(
         this.scale,
         this.notes[this.range[0]],
         this.notes[this.range[1]]

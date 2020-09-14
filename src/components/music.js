@@ -16,18 +16,18 @@ export function randomScaleNote(scale, min, max) {
     return n
 }
 
-function triple(scale, note) {
+function third(scale, note) {
     const ns = Scale.get(scale).notes
     const major = transpose(note, '3M')
     const minor = transpose(note, '3m')
     const scaleContains = x => ns.indexOf(Note.pitchClass(x)) !== -1
 
-    let tripleNote = major
-    if (scaleContains(major) || scaleContains(Note.enharmonic(major))) { tripleNote = major }
-    else if (scaleContains(minor) || scaleContains(Note.enharmonic(minor))) { tripleNote = minor }
+    let thirdNote = major
+    if (scaleContains(major) || scaleContains(Note.enharmonic(major))) { thirdNote = major }
+    else if (scaleContains(minor) || scaleContains(Note.enharmonic(minor))) { thirdNote = minor }
 
-    console.debug('using ', tripleNote == minor ? 'minor' : 'major', 'triple note', tripleNote)
-    return tripleNote;
+    console.debug('using ', thirdNote == minor ? 'minor' : 'major', 'third note', thirdNote)
+    return thirdNote;
 }
 
 function toAbc(scale, note) {
@@ -43,11 +43,11 @@ function toAbc(scale, note) {
     return AbcNotation.scientificToAbcNotation(noteToConvert)
 }
 
-export function createTriples(scale, minNote, maxNote) {
+export function createThirds(scale, minNote, maxNote) {
     const realMaxNote = transpose(maxNote, '-3M')
     return Collection.range(1, 10)
         .map(() => randomScaleNote(scale, minNote, realMaxNote).name)
-        .map(n => [n, triple(scale, n)])
+        .map(n => [n, third(scale, n)])
         .map(([a, b]) => [toAbc(scale, a), toAbc(scale, b)])
 }
 

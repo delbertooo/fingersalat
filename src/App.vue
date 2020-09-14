@@ -12,19 +12,19 @@
     </v-app-bar>
 
     <v-main>
-      <Triples/>
+      <Thirds/>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import Triples from './components/Triples';
+import Thirds from './components/Thirds';
 
 export default {
   name: 'App',
 
   components: {
-    Triples,
+    Thirds,
   },
 
   data: () => ({

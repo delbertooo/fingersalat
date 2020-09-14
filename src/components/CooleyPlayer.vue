@@ -33,7 +33,7 @@
 <script>
 import "abcjs/abcjs-midi.css";
 import abcjs from "abcjs/midi";
-import {createTriples} from "./music"
+import {createThirds} from "./music"
 export default {
   name: "CooleyPlayer",
 
@@ -60,7 +60,7 @@ export default {
 
   methods: {
     generate() {
-      const input = createTriples('F major', 'C4', 'G5')
+      const input = createThirds('F major', 'C4', 'G5')
       const notes = input.map(([a,b]) => a + "2 " + b + "2").join(' | ')
       const lastNote = input[input.length - 1][0] + "4"
       this.tune = `
