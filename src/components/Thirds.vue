@@ -1,9 +1,12 @@
 <template>
   <v-container>
     <v-row class="text-center">
-      <v-col class="d-flex" cols="12">
+      <v-col class="d-flex">
         <v-select :items="scales" v-model="scale" label="Key"
           v-on:change="generate"></v-select>
+      </v-col>
+      <v-col class="d-flex">
+        <v-switch v-model="showFingering" label="Show fingering" v-on:change="generate"></v-switch>
       </v-col>
       <v-col class="d-flex" cols="12">
         <v-range-slider
@@ -53,13 +56,14 @@
 <script>
 import "abcjs/abcjs-midi.css";
 import abcjs from "abcjs/midi";
-import { createThirds, notesBetween } from "./music";
+import { createThirds, notesBetween, fingering } from "./music";
 export default {
   name: "Thirds",
 
   data: () => ({
     progress: {},
     _tune: "",
+    showFingering: false,
     scales: [
       "A major",
       "D major",
@@ -103,16 +107,23 @@ export default {
     this.generate();
   },
   methods: {
+    fingeringText(note) {
+      if (!this.showFingering) {
+        return ''
+      }
+      return fingering(note).map(x => `"_${x}"`).join('')
+    },
     generate() {
       const input = createThirds(
         this.scale,
         this.notes[this.range[0]],
         this.notes[this.range[1]]
       );
+      const toNote = (generatedNote, length) => `${this.fingeringText(generatedNote.note)}${generatedNote.value}${length}`
       const notes = input
-        .map(([a, b]) => "(" + a + "2 " + b + "2" + ")")
+        .map(([a, b]) => `(${toNote(a, 2)} ${toNote(b, 2)})`)
         .join(" | ");
-      const lastNote = input[input.length - 1][0] + "4";
+      const lastNote = toNote(input[input.length - 1][0], 4);
       this.tune = `
 X:4
 T:Thirds

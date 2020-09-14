@@ -40,7 +40,7 @@ function toAbc(scale, note) {
         noteToConvert = n.letter + (n.oct ?? '')
     }
     console.debug('made', note, 'to', noteToConvert)
-    return AbcNotation.scientificToAbcNotation(noteToConvert)
+    return {value: AbcNotation.scientificToAbcNotation(noteToConvert), note}
 }
 
 export function createThirds(scale, minNote, maxNote) {
@@ -69,3 +69,41 @@ export function notesBetween(min, max) {
     return r
 }
 
+const fingeringMap = {
+    "F#3": "123",
+    "G3": "13",
+    "G#3": "23",
+    "A3": "12",
+    "A#3": "1",
+    "B3": "2",
+    "C4": "0",
+    "C#4": "123",
+    "D4": "13",
+    "D#4": "23",
+    "E4": "12",
+    "F4": "1",
+    "F#4": "2",
+    "G4": "0",
+    "G#4": "23",
+    "A4": "12",
+    "A#4": "1",
+    "B4": "2",
+    "C5": "0",
+    "C#5": "12",
+    "D5": "1",
+    "D#5": "2",
+    "E5": "0",
+    "F5": "1",
+    "F#5": "2",
+    "G5": "0",
+    "G#5": "23",
+    "A5": "12",
+    "A#5": "1",
+    "B5": "2",
+    "C6": "0",
+}
+
+export function fingering(note) {
+    const fingering = fingeringMap[note] || fingeringMap[Note.enharmonic(note)] || ''
+    return fingering.split("")
+}
