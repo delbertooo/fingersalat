@@ -50,18 +50,34 @@
         </div>
       </v-col>
     </v-row>
+    <v-snackbar v-model="errorShown">
+      {{ errorText }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          text
+          v-bind="attrs"
+          @click="errorShown = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+
   </v-container>
 </template>
 
 <script>
 import "abcjs/abcjs-midi.css";
 import abcjs from "abcjs/midi";
-import { createThirds, notesBetween, fingering } from "./music";
+import { createThirds, notesBetween, fingering, NotesTooCloseException } from "./music";
 export default {
   name: "Thirds",
 
   data: () => ({
     progress: {},
+    errorShown: false,
+    errorText: "",
     _tune: "",
     _generatedNotes: [],
     showFingering: false,
@@ -116,11 +132,20 @@ export default {
     },
     generate(shallow) {
       if (!shallow) {
-        this._generatedNotes = createThirds(
-          this.scale,
-          this.notes[this.range[0]],
-          this.notes[this.range[1]]
-        )
+        this.errorShown = false
+        try {
+          this._generatedNotes = createThirds(
+            this.scale,
+            this.notes[this.range[0]],
+            this.notes[this.range[1]]
+          )
+        } catch (e) {
+          console.error('error generating notes:', e)
+          if (e instanceof NotesTooCloseException) {
+            this.errorShown = true
+            this.errorText = "Oops. The selected range is too close."
+          }
+        }
       }
       const input = this._generatedNotes
       const toNote = (generatedNote, length) => `${this.fingeringText(generatedNote.note)}${generatedNote.value}${length}`

@@ -1,12 +1,18 @@
 
 import { Note, Scale, Collection, AbcNotation, transpose } from "@tonaljs/tonal";
 
+export class NotesTooCloseException {
+  constructor(message) {
+    this.message = message
+  }
+}
 
 export function randomScaleNote(scale, min, max) {
     const ns = Scale.get(scale).notes
     const hs = [3, 4, 5, 6]
     const minNote = Note.get(min)
     const maxNote = Note.get(max)
+    if (minNote.height >= maxNote.height) throw new NotesTooCloseException('min >= max')
     let n
     do {
         n = Note.get(Collection.shuffle(ns)[0] + Collection.shuffle(hs)[0])
@@ -54,7 +60,7 @@ export function createThirds(scale, minNote, maxNote) {
 export function notesBetween(min, max) {
     const nMin = Note.get(min)
     const nMax = Note.get(max)
-    if (nMin.height >= nMax.height) throw new Error('min >= max')
+    if (nMin.height >= nMax.height) throw new NotesTooCloseException('min >= max')
     const nextNote = note => {
         let n = note
         if (n.alt == -1) {
